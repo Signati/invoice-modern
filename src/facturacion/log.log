@@ -1,0 +1,10 @@
+2019-11-15T06:32:17	SOAP request:	<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tns="https://t1demo.facturacionmoderna.com/timbrado/soap"><soap:Body><tns:requestCancelarCFDI><parameter><UserPass>b9ec2afa3361a59af4b4d102d3f704eabdf097d4</UserPass><UserID>UsuarioPruebasWS</UserID><emisorRFC>TCM970625MB1</emisorRFC><uuid>0A8DCD5A-FFEB-11E9-87C4-2307D22C084A</uuid></parameter></tns:requestCancelarCFDI></soap:Body></soap:Envelope>
+
+2019-11-15T06:32:17	SOAP response:	<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Body><SOAP-ENV:Fault><faultcode>402</faultcode><faultstring>El UUID se encuentra en cola de solicitud de cancelacion.</faultstring></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>
+
+2019-11-15T06:34:39	SOAP request:	<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:tns="https://t1demo.facturacionmoderna.com/timbrado/soap"><soap:Body><tns:requestCancelarCFDI><parameter><UserPass>b9ec2afa3361a59af4b4d102d3f704eabdf097d4</UserPass><UserID>UsuarioPruebasWS</UserID><emisorRFC>TCM970625MB1</emisorRFC><uuid>0A8DCD5A-FFEB-11E9-87C4-2307D22C084A</uuid></parameter></tns:requestCancelarCFDI></soap:Body></soap:Envelope>
+
+2019-11-15T06:34:39	SOAP response:	<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Body><SOAP-ENV:Fault><faultcode>402</faultcode><faultstring>El UUID se encuentra en cola de solicitud de cancelacion.</faultstring></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>
+

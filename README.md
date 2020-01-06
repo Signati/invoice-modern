@@ -1,4 +1,4 @@
-# signati-sdk-node
+# invoice-modern
 "test": "jest --config jestconfig.json",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",

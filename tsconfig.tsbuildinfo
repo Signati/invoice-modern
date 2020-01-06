@@ -265,7 +265,7 @@
       "skipLibCheck": false,
       "composite": true,
       "paths": {
-        "@signatidev/signati-sdk-node": [
+        "@signati/invoice-modern: [
           "src"
         ]
       },
