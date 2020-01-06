@@ -221,7 +221,7 @@ export class FacturacionModerna {
         });
         fs.unlinkSync(fullPath);
         const a: any = {data: JSON.parse(xml)}; // JSON.stringify(xml);
-        return a;
+        return await a.data['cfdi:Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital']._attributes.UUID.toString();
     }
 
     async getTotalXml(pathXml: string) {
