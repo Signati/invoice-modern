@@ -1,0 +1,50 @@
+{
+  "name": "invoice-modern",
+  "version": "0.0.8",
+  "description": "facturacion moderna para nodejs ",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Signati/signati-sdk-node.git"
+  },
+  "keywords": [
+    "Facturacion moderna",
+    "timbres",
+    "sat",
+    "CSD",
+    "FIEL",
+    "XML",
+    "FACTURA"
+  ],
+  "author": "signatidev@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Signati/signati-sdk-node/issues"
+  },
+  "homepage": "https://github.com/Signati/signati-sdk-node#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.19",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.1.0",
+    "ts-node": "^8.4.1",
+    "tsconfig-paths": "^3.9.0",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.6.4"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "dependencies": {
+    "immutable": "^4.0.0-rc.12"
+  }
+}
