@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/signati-sdk-node.iml" filepath="$PROJECT_DIR$/.idea/signati-sdk-node.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/facturacion-moderna.iml" filepath="$PROJECT_DIR$/.idea/facturacion-moderna.iml" />
     </modules>
   </component>
 </project>

@@ -402,8 +402,8 @@
         "signature": "750cf4dcaa3c14afd82c6c3320e22ba36398bab0dc0cff46c64743986d33d51e"
       },
       "./src/facturacion/facturacion-moderna.ts": {
-        "version": "a4f2a0018aa2bff7bded389cb518cffe59cedb4d18fe21e2d64f354ae2121281",
-        "signature": "fde958d8a9339940e36758b572de8dd689156391dd594f7c749448374239f0a8"
+        "version": "bd19bfe81051562c36352d9e487ca4447994693a6bb9cf5035eb516f57854c21",
+        "signature": "bd2a4937135b786f59321962e15fa09b28e3692f2f48343ef2b729255b114303"
       },
       "./src/index.ts": {
         "version": "52efc85d0a191572727d65300e061d68f579a8c5904ee1d12fc8325cbc3f5996",
