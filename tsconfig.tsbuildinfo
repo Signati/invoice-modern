@@ -402,8 +402,8 @@
         "signature": "750cf4dcaa3c14afd82c6c3320e22ba36398bab0dc0cff46c64743986d33d51e"
       },
       "./src/facturacion/facturacion-moderna.ts": {
-        "version": "df9197aa0c52959d1a60ef5252e42df573e2c55bf750449b7016bd37cc398b8a",
-        "signature": "519af17ecae6b67bfa072f2f3aaaba0ac2636a9a7c372322052b1278a08e9f98"
+        "version": "a4f2a0018aa2bff7bded389cb518cffe59cedb4d18fe21e2d64f354ae2121281",
+        "signature": "fde958d8a9339940e36758b572de8dd689156391dd594f7c749448374239f0a8"
       },
       "./src/index.ts": {
         "version": "52efc85d0a191572727d65300e061d68f579a8c5904ee1d12fc8325cbc3f5996",
@@ -1932,6 +1932,9 @@
         "./node_modules/@types/node/util.d.ts",
         "./node_modules/@types/node/ts3.2/util.d.ts"
       ],
+      "./src/facturacion/facturacion-moderna.ts": [
+        "./src/interfaces/FactMod.ts"
+      ],
       "./src/index.ts": [
         "./src/facturacion/facturacion-moderna.ts"
       ],
@@ -1970,9 +1973,6 @@
       ],
       "./node_modules/@types/yargs/index.d.ts": [
         "./node_modules/@types/yargs-parser/index.d.ts"
-      ],
-      "./src/facturacion/facturacion-moderna.ts": [
-        "./src/interfaces/FactMod.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -2075,6 +2075,7 @@
       "./node_modules/soap/lib/utils.d.ts",
       "./node_modules/soap/lib/soap.d.ts",
       "./node_modules/xml-js/types/index.d.ts",
+      "./src/interfaces/FactMod.ts",
       "./node_modules/@babel/types/lib/index.d.ts",
       "./node_modules/@types/babel__generator/index.d.ts",
       "./node_modules/@types/babel__traverse/index.d.ts",
@@ -2091,7 +2092,6 @@
       "./node_modules/@types/stack-utils/index.d.ts",
       "./node_modules/@types/yargs-parser/index.d.ts",
       "./node_modules/@types/yargs/index.d.ts",
-      "./src/interfaces/FactMod.ts",
       "./src/facturacion/facturacion-moderna.ts",
       "./src/index.ts"
     ]

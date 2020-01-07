@@ -219,7 +219,7 @@ export class FacturacionModerna {
         };
     }
 
-    private async saveFile(file: string, pathSave: string, name: string): Promise<void> {
+    public async saveFile(file: string, pathSave: string, name: string): Promise<void> {
         const fullPath = `${pathSave}${name}`;
         fs.writeFileSync(fullPath, new Buffer(file, 'base64'), 'utf8');
     }
