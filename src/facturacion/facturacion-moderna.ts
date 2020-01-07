@@ -16,9 +16,6 @@ import {
 } from '../interfaces/FactMod'; // using this syntax, it does work
 
 
-
-
-
 interface ObjecErroreCacelar {
     faultcode: string;
     faultstring: string;
@@ -220,6 +217,11 @@ export class FacturacionModerna {
             uuid: await a.data['cfdi:Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital']._attributes.UUID.toString(),
             total: await a.data['cfdi:Comprobante']._attributes.Total.toString(),
         };
+    }
+
+    private async saveFile(file: string, pathSave: string, name: string): Promise<void> {
+        const fullPath = `${pathSave}${name}`;
+        fs.writeFileSync(fullPath, new Buffer(file, 'base64'), 'utf8');
     }
 
     async getTotalXml(pathXml: string) {
