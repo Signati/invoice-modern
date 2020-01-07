@@ -5,110 +5,103 @@ import * as path from 'path';
 import * as moment from 'moment-timezone';
 import {WriteStream} from 'fs';
 import * as os from 'os';
+import {js2xml, xml2json} from 'xml-js';
+import {
+    OptionsFactMod,
+    OptionsSoapFactMod,
+    ParamTimbrado,
+    ResTimbrado,
+    SaldoFactMod,
+    SaldoXml, StadoCancelationCfdi
+} from '../interfaces/FactMod'; // using this syntax, it does work
 
-import {js2xml, xml2json} from 'xml-js'; // using this syntax, it does work
 
-const defaults = {
-    user: 'UsuarioPruebasWS',
-    password: 'b9ec2afa3361a59af4b4d102d3f704eabdf097d4',
-    path: './comprobantes/',
-};
 
-export interface Options {
-    UserPass: string;
-    UserID: string;
-    emisorRFC?: string;
-    receptorRFC?: string;
-    UUID?: string;
-    RFC?: string;
-    uuid?: string;
-    generarCBB?: string;
-    generarPDF?: string;
-    generarTXT?: string;
-    text2CFDI?: string;
-    total?: string;
 
-}
-
-interface SaldoXml {
-    key: {
-        '$value': 'status';
-    };
-    value: {
-        '$value': '1';
-    };
-}
 
 interface ObjecErroreCacelar {
     faultcode: string;
     faultstring: string;
 }
 
-interface Saldo {
-    status: number;
-    timbres_asignados: number;
-    fecha_alta: string;
-    consumidos: number;
-    restante: number;
-}
 
 const uuid_format = /[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}/g;
 
 export class FacturacionModerna {
     private url: string;
-    private options: Options = {} as Options;
+    private options: OptionsSoapFactMod = {} as OptionsSoapFactMod;
     private debug: number = 0;
 
-    constructor(url: string, options: Options, debug: number = 0) {
-        this.url = url;
-        for (const key in options) {
-            if (options.hasOwnProperty(key)) {
-                this.options[key] = options[key];
-            }
-        }
-        this.debug = debug;
+    constructor(options: OptionsFactMod) {
+        this.url = options.develoment ? 'https://t1demo.facturacionmoderna.com/timbrado/wsdl' : 'https://t2.facturacionmoderna.com/timbrado/wsdl';
+        this.options.UserID = options.UserID;
+        this.options.UserPass = options.UserPass
+        this.debug = options.debug;
     }
 
-    public timbrar({
-                       emisorRFC,
-                       generarCBB,
-                       generarPDF,
-                       generarTXT,
-                       text2CFDI,
-                   }: any) {
+    /**
+     * @param {String} emisorRFC
+     *  Establece el valor de quien emite la factura
+     * @param {String} generarCBB
+     * Establecer el valor a true, si desea que el Web services genere el CBB en
+     * formato PNG correspondiente.
+     * Nota: Utilizar está opción deshabilita 'generarPDF'
+     *
+     * @param {String} generarPDF Nota: Utilizar está opción deshabilita 'generarPDF'
+     * Establecer el valor a true, si desea que el Web services genere la
+     * representación impresa del XML en formato PDF.
+     * Nota: Utilizar está opción deshabilita 'generarCBB'
+     * @param {String} generarTXT
+     *  Establecer el valor a true, si desea que el servicio genere un archivo de
+     * texto simple con los datos del Nodo: TimbreFiscalDigital
+     *  @param {String} text2CFDI
+     *  Establece el layout o xml a timbrar ya sellado
+
+     */
+    public timbrar(options: ParamTimbrado): Promise<ResTimbrado> {
         return new Promise(async (resolve, reject) => {
             try {
-                this.options.emisorRFC = emisorRFC;
-                this.options.generarCBB = generarCBB;
-                this.options.generarPDF = generarPDF;
-                this.options.generarTXT = generarTXT;
-                this.options.text2CFDI = Buffer.from(text2CFDI).toString('base64');
+                this.options.emisorRFC = options.emisorRFC;
+                this.options.generarCBB = options.generarCBB ? true : false;
+                this.options.generarPDF = options.generarPDF ? true : false;
+                this.options.generarTXT = options.generarTXT ? true : false;
+                if (options.text2CFDI) {
+                    this.options.text2CFDI = Buffer.from(options.text2CFDI).toString('base64');
+                } else {
+                    reject({
+                        error: 'layout o xml indefinido'
+                    });
+                }
+
                 const cliente = await createClientAsync(this.url, {wsdl_options: {trace: 1}});
                 const timbre = await cliente.requestTimbrarCFDIAsync({parameter: this.options});
                 const data = timbre[0].return;
-                const result: { xml?: string, txt?: string, png?: string, pdf?: string, uuid?: string } = {};
+                const result: ResTimbrado = {} as ResTimbrado;
                 for (const key in data) {
                     if (data.hasOwnProperty(key)) {
                         result[key] = data[key].$value;
                     }
                 }
-                result.uuid = result.xml ? await this.getUuid(result.xml) : 'Error al timbrar';
+                const res = await this.getUuid(result.xml);
+                result.uuid = res.uuid;
+                result.total = res.total;
                 resolve(result);
             } catch (e) {
-                console.log(e)
-                reject(e);
+                reject({
+                    error: e
+                });
             }
         });
     }
 
-    public consultarSaldo(rfc: string) {
+    public async consultarSaldo(rfc: string): Promise<SaldoFactMod> {
         return new Promise(async (resolve, reject) => {
             const cliente = await createClientAsync(this.url);
             try {
                 this.options.RFC = rfc;
                 const le = await cliente.consultarSaldoAsync({parameter: this.options});
                 const saldo: SaldoXml[] = le[0].return.item;
-                const obj: Saldo | any = {} as Saldo;
+                const obj: SaldoFactMod | any = {} as SaldoFactMod;
                 for (const dato of saldo) {
                     obj[dato.key.$value] = dato.value.$value;
                 }
@@ -119,7 +112,9 @@ export class FacturacionModerna {
                     this.log('SOAP request:\t' + cliente.lastRequest.toString('utf8'));
                     this.log('SOAP response:\t' + cliente.lastResponse.toString('utf8'));
                 }
-                reject(e);
+                reject({
+                    error: e
+                });
             }
         });
     }
@@ -136,7 +131,7 @@ export class FacturacionModerna {
        * GT11: Cancelacion con aceptacion de recepto
        *
        */
-    cancelar(emisorRFC: string, uuid: string): Promise<{ Code, Message }> {
+    cancelar(emisorRFC: string, uuid: string): Promise<{ Code: string, Message: string }> {
         return new Promise(async (resolve, reject) => {
             const cliente = await createClientAsync(this.url);
             try {
@@ -171,7 +166,7 @@ export class FacturacionModerna {
         });
     }
 
-    async estadoCancelacion(emisorRFC: string, receptorRFC: string, UUID: string, total: string): Promise<{ http_code, estado, esCancelable, estatusCancelacion, EstatusFM }> {
+    async estadoCancelacion(emisorRFC: string, receptorRFC: string, UUID: string, total: string): Promise<StadoCancelationCfdi> {
         return new Promise(async (resolve, reject) => {
             const cliente = await createClientAsync(this.url);
             try {
@@ -181,7 +176,7 @@ export class FacturacionModerna {
                 this.options.total = total;
                 const resultado: any[] = await cliente.consultarEstatusCFDIAsync({parameter: this.options});
                 const data = resultado[0].return;
-                const result: any = {};
+                const result: StadoCancelationCfdi = {} as StadoCancelationCfdi;
                 for (const key in data) {
                     if (data.hasOwnProperty(key)) {
                         result[key] = data[key].$value ? data[key].$value : 'No disponible';
@@ -208,7 +203,7 @@ export class FacturacionModerna {
         fs.appendFileSync(log, fecha);
     }
 
-    private async getUuid(file: string) {
+    private async getUuid(file: string): Promise<{ uuid: string, total: string }> {
         const fileNameTemp = Date.now();
         const fullPath = path.join(os.tmpdir(), `${fileNameTemp.toString()}.xml`);
         fs.writeFileSync(fullPath, new Buffer(file, 'base64'), 'utf8');
@@ -221,7 +216,10 @@ export class FacturacionModerna {
         });
         fs.unlinkSync(fullPath);
         const a: any = {data: JSON.parse(xml)}; // JSON.stringify(xml);
-        return await a.data['cfdi:Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital']._attributes.UUID.toString();
+        return {
+            uuid: await a.data['cfdi:Comprobante']['cfdi:Complemento']['tfd:TimbreFiscalDigital']._attributes.UUID.toString(),
+            total: await a.data['cfdi:Comprobante']._attributes.Total.toString(),
+        };
     }
 
     async getTotalXml(pathXml: string) {
